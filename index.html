@@ -2,6 +2,7 @@
 <html lang="it"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <meta name="application-name" content="TEST GRILA">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -9,9 +10,13 @@
 <meta name="theme-color" content="#1f4ed8">
 <meta name="description" content="Test Grila — piattaforma di training per la preparazione ai quiz di medicina.">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
 <title>TEST GRILA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -2449,13 +2454,15 @@ function generateQR(text){
 refreshSyncPanel();
 </script>
 
+
 <script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js').catch(function (err) {
-      console.warn('Service worker non registrato:', err);
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js').catch(function(err) {
+      console.warn('Service worker non registrato', err);
     });
   });
 }
 </script>
+
 </body></html>
