@@ -58,180 +58,217 @@
   ::-webkit-scrollbar-thumb { background: var(--c-text-3); border-radius: 3px; }
 
   /* ── HEADER ── */
-  header {
-  background: var(--c-surface);
-  border-bottom: 1px solid var(--c-border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  padding: 14px 18px 12px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
-  min-height: unset;
-  height: auto;
-  backdrop-filter: blur(12px);
-}
-
-header::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: linear-gradient(180deg, var(--c-accent), #a78bfa);
-  border-radius: 0 2px 2px 0;
-}
-
-.header-left {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  min-width: 0;
-  flex: 1;
-}
-
-.header-topline {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-header h1 {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--c-text);
-  letter-spacing: -0.3px;
-  line-height: 1.2;
-  margin: 0;
-  white-space: normal;
-  word-break: break-word;
-}
-
-header .sub {
-  font-size: 12px;
-  color: var(--c-text-2);
-  margin-top: 4px;
-  line-height: 1.4;
-  white-space: normal;
-  word-break: break-word;
-}
-
-.sub-authors b {
-  color: var(--c-text-2);
-  font-weight: 700;
-}
-
-.mode-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 12px;
-  background: var(--c-accent-dim);
-  color: var(--c-accent);
-  border: 1px solid rgba(108,142,255,.2);
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .4px;
-  text-transform: uppercase;
-  font-family: var(--font-display);
-  white-space: nowrap;
-  margin-left: 0;
-}
-
-#userBar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  flex-shrink: 0;
-}
-
-#currentUserBadge {
-  background: var(--c-accent-dim);
-  color: var(--c-accent);
-  border: 1px solid rgba(108,142,255,.2);
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: .3px;
-}
-
-@media (max-width: 700px) {
-  header {
-    padding: 12px 14px 10px;
-    gap: 10px;
+  :root {
+    --c-header-bg-1: #6677d8;
+    --c-header-bg-2: #7d7ae3;
+    --c-header-text: #ffffff;
+    --c-header-sub: rgba(255,255,255,.84);
+    --c-header-pill-bg: rgba(255,255,255,.16);
+    --c-header-pill-border: rgba(255,255,255,.28);
+    --c-header-pill-text: #ffffff;
+    --c-header-user-bg: rgba(255,255,255,.14);
+    --c-header-user-border: rgba(255,255,255,.26);
   }
 
-  .header-topline {
+  header {
+    background: linear-gradient(135deg, var(--c-header-bg-1) 0%, var(--c-header-bg-2) 100%);
+    border-bottom: 1px solid rgba(255,255,255,.14);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 14px 18px 12px;
+    display: flex;
     align-items: flex-start;
-    gap: 8px;
+    justify-content: space-between;
+    gap: 14px;
+    min-height: unset;
+    height: auto;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 28px rgba(87, 95, 173, .18);
   }
 
-  header h1 {
-    font-size: 16px;
-    max-width: 100%;
-  }
-
-  .mode-pill {
-    font-size: 10px;
-    padding: 4px 10px;
-  }
-
-  header .sub {
-    font-size: 11px;
-  }
-
-  #userBar {
-    align-self: flex-start;
-  }
-}
-
-@media (max-width: 560px) {
-  header {
-    padding: 10px 12px 9px;
+  header::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.15));
+    border-radius: 0 2px 2px 0;
   }
 
   .header-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     min-width: 0;
+    flex: 1;
   }
 
   .header-topline {
-    flex-direction: row;
+    display: flex;
     align-items: center;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
   header h1 {
-    font-size: 15px;
-  }
-
-  .mode-pill {
-    font-size: 10px;
-    padding: 3px 9px;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--c-header-text);
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+    margin: 0;
+    white-space: normal;
+    word-break: break-word;
   }
 
   header .sub {
-    font-size: 10px;
-    line-height: 1.35;
+    font-size: 12px;
+    color: var(--c-header-sub);
+    margin-top: 4px;
+    line-height: 1.45;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .sub-main,
+  .sub-authors,
+  .sub-access {
+    display: block;
+  }
+
+  .sub-authors b {
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  .mode-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 12px;
+    background: var(--c-header-pill-bg);
+    color: var(--c-header-pill-text);
+    border: 1px solid var(--c-header-pill-border);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    font-family: var(--font-display);
+    white-space: nowrap;
+    margin-left: 0;
+    backdrop-filter: blur(8px);
+  }
+
+  #userBar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
   }
 
   #currentUserBadge {
-    padding: 5px 10px;
-    font-size: 11px;
+    background: var(--c-header-user-bg);
+    color: #ffffff;
+    border: 1px solid var(--c-header-user-border);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: .3px;
+    backdrop-filter: blur(8px);
   }
 
   #userBar .ghost {
-    padding: 4px 6px;
-    font-size: 11px;
+    color: rgba(255,255,255,.9);
+  }
+  #userBar .ghost:hover {
+    background: rgba(255,255,255,.12);
+    color: #fff;
   }
 
+  body.view-app .sub-authors {
+    display: none;
+  }
+
+  @media (max-width: 700px) {
+    header {
+      padding: 12px 14px 10px;
+      gap: 10px;
+    }
+
+    .header-topline {
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    header h1 {
+      font-size: 16px;
+      max-width: 100%;
+    }
+
+    .mode-pill {
+      font-size: 10px;
+      padding: 4px 10px;
+    }
+
+    header .sub {
+      font-size: 11px;
+    }
+
+    #userBar {
+      align-self: flex-start;
+    }
+  }
+
+  @media (max-width: 560px) {
+    header {
+      padding: 10px 12px 9px;
+      gap: 8px;
+    }
+
+    .header-left {
+      min-width: 0;
+    }
+
+    .header-topline {
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    header h1 {
+      font-size: 15px;
+    }
+
+    .mode-pill {
+      font-size: 10px;
+      padding: 3px 9px;
+      letter-spacing: .3px;
+    }
+
+    header .sub {
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    #currentUserBadge {
+      padding: 5px 10px;
+      font-size: 11px;
+    }
+
+    #userBar .ghost {
+      padding: 4px 6px;
+      font-size: 11px;
+    }
+  }
 
   /* ── LAYOUT ── */
   .container { max-width: 760px; margin: 0 auto; padding: 28px 16px 100px; }
@@ -445,15 +482,6 @@ header .sub {
     height: 100%; transition: width .3s cubic-bezier(.4,0,.2,1);
   }
 
-  /* ── MODE PILL ── */
-  .mode-pill {
-    display: inline-block; padding: 3px 12px;
-    background: var(--c-accent-dim); color: var(--c-accent);
-    border: 1px solid rgba(108,142,255,.2);
-    border-radius: 20px; font-size: 11px; font-weight: 600;
-    margin-left: 10px; letter-spacing: .5px; text-transform: uppercase;
-    vertical-align: middle; font-family: var(--font-display);
-  }
 
   /* ── SUMMARY CARD ── */
   .summary-card {
@@ -639,18 +667,6 @@ header .sub {
   .admin-add input { flex: 1; margin-top: 0; }
   .admin-add button { flex-shrink: 0; }
 
-  header { position: relative; }
-  #userBar {
-    display: flex; align-items: center; gap: 8px; font-size: 13px;
-  }
-  #userBar button.ghost { padding: 4px 10px; font-size: 12px; }
-  #currentUserBadge {
-    background: var(--c-accent-dim); color: var(--c-accent);
-    border: 1px solid rgba(108,142,255,.2);
-    padding: 4px 14px; border-radius: 20px; font-weight: 600; font-size: 12px;
-    letter-spacing: .3px;
-  }
-
   .admin-note {
     background: var(--c-yellow-dim); border-left: 4px solid var(--c-yellow);
     padding: 10px 14px; font-size: 13px; color: var(--c-yellow);
@@ -661,9 +677,6 @@ header .sub {
     .container { padding: 14px 10px 70px; }
     .question, .panel { padding: 20px 16px; }
     .q-text { font-size: 15px; }
-    header { padding: 0 16px; height: 58px; }
-    header h1 { font-size: 16px; }
-    header .sub { font-size: 11px; }
     .summary-card .big { font-size: 44px; }
     button { padding: 10px 16px; }
   }
@@ -727,11 +740,15 @@ header .sub {
 </head>
 <body>
 
-<header>
+<header id="appHeader">
   <div class="header-left">
-    <h1>Quiz Medicina <span class="mode-pill" id="modePill">PARZIALE LINEARE</span></h1>
-    <div class="sub">Grile Licenta 2021 — 1157 domande &nbsp;|&nbsp; Creato da <b>Adriana Accetta</b> &amp; <b>Dario Ciancio</b></div>
-    <div style="font-size:11px; color:var(--c-text-3); margin-top:2px;">Piattaforma di training — accesso riservato</div>
+    <div class="header-topline">
+      <h1>Quiz Medicina</h1>
+      <span class="mode-pill" id="modePill">PARZIALE LINEARE</span>
+    </div>
+    <div class="sub sub-main">Grile Licenta 2021 — 1157 domande</div>
+    <div class="sub sub-authors" id="headerAuthors">Creato da <b>Adriana Accetta</b> &amp; <b>Dario Ciancio</b></div>
+    <div class="sub sub-access">Piattaforma di training — accesso riservato</div>
   </div>
   <div id="userBar" class="hidden">
     <span id="currentUserBadge">👤 caio</span>
@@ -1155,6 +1172,12 @@ function normalizeName(n) {
   return String(n || '').trim().toLowerCase();
 }
 
+function updateHeaderForView() {
+  const isAppVisible = !document.getElementById('mainApp').classList.contains('hidden');
+  document.body.classList.toggle('view-app', isAppVisible);
+  document.body.classList.toggle('view-login', !isAppVisible);
+}
+
 function tryLogin() {
   const nameInput = document.getElementById('loginName').value;
   const name = normalizeName(nameInput);
@@ -1199,6 +1222,7 @@ function enterApp(displayName) {
   updateSmartReviewUI();
   renderChapterStats();
   refreshSyncPanel();
+  updateHeaderForView();
   window.scrollTo({top: 0});
 }
 
@@ -1216,6 +1240,7 @@ function logout() {
   if (summaryEl) summaryEl.innerHTML = '';
   if (listEl) listEl.innerHTML = '';
   refreshSyncPanel();
+  updateHeaderForView();
   window.scrollTo({top: 0});
 }
 
@@ -1224,12 +1249,14 @@ function openAdminPrompt() {
   document.getElementById('adminPassPrompt').classList.remove('hidden');
   document.getElementById('adminError').textContent = '';
   document.getElementById('adminPass').value = '';
+  updateHeaderForView();
   setTimeout(() => { const el = document.getElementById('adminPass'); if (el) el.focus(); }, 50);
 }
 
 function cancelAdmin() {
   document.getElementById('adminPassPrompt').classList.add('hidden');
   document.getElementById('loginScreen').classList.remove('hidden');
+  updateHeaderForView();
 }
 
 async function tryAdmin() {
@@ -1364,6 +1391,7 @@ function downloadUpdatedHtml() {
 
   document.getElementById('loginScreen').className = '';
   document.getElementById('mainApp').className = 'hidden';
+  updateHeaderForView();
   document.getElementById('adminPanel').className = 'hidden';
   document.getElementById('adminPassPrompt').className = 'hidden';
   document.getElementById('userBar').className = 'hidden';
