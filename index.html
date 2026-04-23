@@ -32,6 +32,10 @@
     --c-accent: #4c6ef5;
     --c-accent-dim: rgba(76,110,245,.09);
     --c-accent-glow: rgba(76,110,245,.2);
+    --c-header-start: #6f7ce8;
+    --c-header-end: #7a7fe6;
+    --c-header-text: #f8faff;
+    --c-header-soft: rgba(248,250,255,.82);
     --c-green: #12b76a;
     --c-green-dim: rgba(18,183,106,.09);
     --c-red: #e0404f;
@@ -58,44 +62,26 @@
   ::-webkit-scrollbar-thumb { background: var(--c-text-3); border-radius: 3px; }
 
   /* ── HEADER ── */
-  :root {
-    --c-header-bg-1: #6677d8;
-    --c-header-bg-2: #7d7ae3;
-    --c-header-text: #ffffff;
-    --c-header-sub: rgba(255,255,255,.84);
-    --c-header-pill-bg: rgba(255,255,255,.16);
-    --c-header-pill-border: rgba(255,255,255,.28);
-    --c-header-pill-text: #ffffff;
-    --c-header-user-bg: rgba(255,255,255,.14);
-    --c-header-user-border: rgba(255,255,255,.26);
-  }
+  html, body { overflow-x: hidden; }
 
   header {
-    background: linear-gradient(135deg, var(--c-header-bg-1) 0%, var(--c-header-bg-2) 100%);
-    border-bottom: 1px solid rgba(255,255,255,.14);
+    background: linear-gradient(135deg, var(--c-header-start), var(--c-header-end));
+    border-bottom: 1px solid rgba(255,255,255,.12);
     position: sticky;
     top: 0;
     z-index: 100;
-    padding: 14px 18px 12px;
+    padding: 16px 20px 14px;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 14px;
+    gap: 16px;
     min-height: unset;
     height: auto;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 10px 28px rgba(87, 95, 173, .18);
+    box-shadow: 0 8px 24px rgba(60,70,140,.14);
   }
 
   header::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.15));
-    border-radius: 0 2px 2px 0;
+    display: none;
   }
 
   .header-left {
@@ -109,17 +95,17 @@
   .header-topline {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
   }
 
   header h1 {
     font-family: var(--font-display);
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 19px;
+    font-weight: 700;
     color: var(--c-header-text);
-    letter-spacing: -0.3px;
-    line-height: 1.2;
+    letter-spacing: -0.4px;
+    line-height: 1.15;
     margin: 0;
     white-space: normal;
     word-break: break-word;
@@ -127,80 +113,77 @@
 
   header .sub {
     font-size: 12px;
-    color: var(--c-header-sub);
-    margin-top: 4px;
-    line-height: 1.45;
+    color: var(--c-header-soft);
+    margin-top: 5px;
+    line-height: 1.38;
     white-space: normal;
     word-break: break-word;
   }
 
-  .sub-main,
-  .sub-authors,
-  .sub-access {
-    display: block;
+  .sub-authors b {
+    color: var(--c-header-text);
+    font-weight: 700;
   }
 
-  .sub-authors b {
-    color: #ffffff;
-    font-weight: 700;
+  .sub-access {
+    color: rgba(248,250,255,.72);
   }
 
   .mode-pill {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 4px 12px;
-    background: var(--c-header-pill-bg);
-    color: var(--c-header-pill-text);
-    border: 1px solid var(--c-header-pill-border);
+    padding: 6px 14px;
+    min-height: 34px;
+    background: rgba(255,255,255,.16);
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255,.24);
     border-radius: 999px;
     font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .4px;
+    font-weight: 800;
+    letter-spacing: .6px;
     text-transform: uppercase;
     font-family: var(--font-display);
     white-space: nowrap;
     margin-left: 0;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
     backdrop-filter: blur(8px);
   }
 
   #userBar {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     font-size: 13px;
     flex-shrink: 0;
-    margin-top: 2px;
   }
 
   #currentUserBadge {
-    background: var(--c-header-user-bg);
+    background: rgba(255,255,255,.12);
     color: #ffffff;
-    border: 1px solid var(--c-header-user-border);
-    padding: 6px 14px;
+    border: 1px solid rgba(255,255,255,.22);
+    padding: 8px 16px;
     border-radius: 999px;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 12px;
-    letter-spacing: .3px;
+    letter-spacing: .2px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.1);
     backdrop-filter: blur(8px);
   }
 
   #userBar .ghost {
-    color: rgba(255,255,255,.9);
-  }
-  #userBar .ghost:hover {
-    background: rgba(255,255,255,.12);
-    color: #fff;
+    color: rgba(255,255,255,.96);
   }
 
-  body.view-app .sub-authors {
-    display: none;
+  #userBar .ghost:hover {
+    background: rgba(255,255,255,.08);
+    color: #ffffff;
   }
 
   @media (max-width: 700px) {
     header {
-      padding: 12px 14px 10px;
-      gap: 10px;
+      padding: 14px 16px 12px;
+      gap: 12px;
     }
 
     .header-topline {
@@ -209,58 +192,44 @@
     }
 
     header h1 {
-      font-size: 16px;
+      font-size: 17px;
       max-width: 100%;
     }
 
     .mode-pill {
       font-size: 10px;
-      padding: 4px 10px;
+      padding: 5px 11px;
+      min-height: 30px;
     }
 
     header .sub {
       font-size: 11px;
     }
-
-    #userBar {
-      align-self: flex-start;
-    }
   }
 
   @media (max-width: 560px) {
     header {
-      padding: 10px 12px 9px;
-      gap: 8px;
-    }
-
-    .header-left {
-      min-width: 0;
-    }
-
-    .header-topline {
-      flex-direction: row;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
+      padding: 12px 14px 11px;
     }
 
     header h1 {
-      font-size: 15px;
+      font-size: 16px;
     }
 
     .mode-pill {
       font-size: 10px;
-      padding: 3px 9px;
-      letter-spacing: .3px;
+      padding: 4px 10px;
+      min-height: 28px;
+      letter-spacing: .45px;
     }
 
     header .sub {
       font-size: 10px;
-      line-height: 1.35;
+      line-height: 1.34;
     }
 
     #currentUserBadge {
-      padding: 5px 10px;
+      padding: 6px 12px;
       font-size: 11px;
     }
 
@@ -667,6 +636,8 @@
   .admin-add input { flex: 1; margin-top: 0; }
   .admin-add button { flex-shrink: 0; }
 
+  header { position: sticky; }
+
   .admin-note {
     background: var(--c-yellow-dim); border-left: 4px solid var(--c-yellow);
     padding: 10px 14px; font-size: 13px; color: var(--c-yellow);
@@ -679,6 +650,29 @@
     .q-text { font-size: 15px; }
     .summary-card .big { font-size: 44px; }
     button { padding: 10px 16px; }
+  }
+
+
+
+  .simple-footer {
+    margin-top: 30px;
+    padding: 18px 10px 2px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--c-text-2);
+    letter-spacing: .01em;
+  }
+
+  .simple-footer strong {
+    color: #5865d8;
+    font-weight: 600;
+  }
+
+  .simple-footer .copyright {
+    margin-top: 4px;
+    color: var(--c-text-3);
+    font-size: 12px;
   }
 
   /* ── RESUME BANNER ── */
@@ -744,7 +738,7 @@
   <div class="header-left">
     <div class="header-topline">
       <h1>Quiz Medicina</h1>
-      <span class="mode-pill" id="modePill">PARZIALE LINEARE</span>
+      <span class="mode-pill hidden" id="modePill">MODALITÀ STUDIO</span>
     </div>
     <div class="sub sub-main">Grile Licenta 2021 — 1157 domande</div>
     <div class="sub sub-authors" id="headerAuthors">Creato da <b>Adriana Accetta</b> &amp; <b>Dario Ciancio</b></div>
@@ -993,6 +987,12 @@
         </div>
       </div>
     </div>
+
+    <div class="simple-footer">
+      <div>Progetto ideato da <strong>Adriana Accetta</strong> e <strong>Dario Ciancio</strong></div>
+      <div class="copyright">© 2026 Tutti i diritti riservati</div>
+    </div>
+
   </div>
 
   <!-- SCHERMATA QUIZ -->
@@ -1004,7 +1004,7 @@
           &nbsp;·&nbsp;
           <span id="curChap" style="color:#6b7a8f;"></span>
         </div>
-        <div style="font-size:14px;">
+        <div id="liveScoreWrap" style="font-size:14px;">
           Punteggio: <b id="liveScore">0.00</b> / <span id="liveMax">0</span>
         </div>
       </div>
@@ -1080,12 +1080,10 @@
       <div id="reviewContainer"></div>
 
     </div>
-
-    <!-- FOOTER -->
-    <footer style="margin-top:48px; padding:28px 24px; border-top:1px solid var(--c-border); text-align:center; font-size:13px; color:var(--c-text-2);">
-      <div>Progetto ideato da <strong style="color:var(--c-text);">Adriana Accetta</strong> e <strong style="color:var(--c-text);">Dario Ciancio</strong></div>
-      <div style="margin-top:6px; color:var(--c-text-3);">© 2026 Tutti i diritti riservati</div>
-    </footer>
+    <div class="simple-footer">
+      <div>Progetto ideato da <strong>Adriana Accetta</strong> e <strong>Dario Ciancio</strong></div>
+      <div class="copyright">© 2026 Tutti i diritti riservati</div>
+    </div>
   </div>
 
   </div><!-- /#mainApp -->
@@ -1172,12 +1170,6 @@ function normalizeName(n) {
   return String(n || '').trim().toLowerCase();
 }
 
-function updateHeaderForView() {
-  const isAppVisible = !document.getElementById('mainApp').classList.contains('hidden');
-  document.body.classList.toggle('view-app', isAppVisible);
-  document.body.classList.toggle('view-login', !isAppVisible);
-}
-
 function tryLogin() {
   const nameInput = document.getElementById('loginName').value;
   const name = normalizeName(nameInput);
@@ -1222,7 +1214,7 @@ function enterApp(displayName) {
   updateSmartReviewUI();
   renderChapterStats();
   refreshSyncPanel();
-  updateHeaderForView();
+  toggleQuizScoreVisibility();
   window.scrollTo({top: 0});
 }
 
@@ -1240,7 +1232,7 @@ function logout() {
   if (summaryEl) summaryEl.innerHTML = '';
   if (listEl) listEl.innerHTML = '';
   refreshSyncPanel();
-  updateHeaderForView();
+  toggleQuizScoreVisibility();
   window.scrollTo({top: 0});
 }
 
@@ -1249,14 +1241,12 @@ function openAdminPrompt() {
   document.getElementById('adminPassPrompt').classList.remove('hidden');
   document.getElementById('adminError').textContent = '';
   document.getElementById('adminPass').value = '';
-  updateHeaderForView();
   setTimeout(() => { const el = document.getElementById('adminPass'); if (el) el.focus(); }, 50);
 }
 
 function cancelAdmin() {
   document.getElementById('adminPassPrompt').classList.add('hidden');
   document.getElementById('loginScreen').classList.remove('hidden');
-  updateHeaderForView();
 }
 
 async function tryAdmin() {
@@ -1391,7 +1381,6 @@ function downloadUpdatedHtml() {
 
   document.getElementById('loginScreen').className = '';
   document.getElementById('mainApp').className = 'hidden';
-  updateHeaderForView();
   document.getElementById('adminPanel').className = 'hidden';
   document.getElementById('adminPassPrompt').className = 'hidden';
   document.getElementById('userBar').className = 'hidden';
@@ -1771,6 +1760,23 @@ function buildSmartReviewPayload(wrong, partial, scoring) {
   };
 }
 
+function modeLabel(mode) {
+  return mode === 'exam' ? 'MODALITÀ ESAME' : 'MODALITÀ STUDIO';
+}
+
+function refreshModePill() {
+  const pill = document.getElementById('modePill');
+  const loginScreen = document.getElementById('loginScreen');
+  if (!pill || !loginScreen) return;
+  const loginVisible = !loginScreen.classList.contains('hidden');
+  if (loginVisible) {
+    pill.classList.add('hidden');
+    return;
+  }
+  pill.classList.remove('hidden');
+  pill.textContent = state.sessionType === 'smart_review' ? 'RIPASSO INTELLIGENTE' : modeLabel(state.mode || 'study');
+}
+
 function startSmartReview() {
   const data = loadSmartReview();
   if (!data || !Array.isArray(data.queue) || data.queue.length === 0) {
@@ -1788,12 +1794,13 @@ function startSmartReview() {
   state.started = Date.now();
   state.sessionType = 'smart_review';
 
-  document.getElementById('modePill').textContent = 'RIPASSO INTELLIGENTE';
+  refreshModePill();
   document.getElementById('setup').classList.add('hidden');
   document.getElementById('resumeBanner').classList.add('hidden');
   document.getElementById('results').classList.add('hidden');
   document.getElementById('quiz').classList.remove('hidden');
   document.getElementById('totNum').textContent = state.queue.length;
+  toggleQuizScoreVisibility();
 
   saveState();
   renderQuestion();
@@ -1820,7 +1827,7 @@ function resumeSaved() {
   if (!state.optionOrders) {
     state.optionOrders = buildSessionOptionOrders(state.queue || [], state.mode || 'study');
   }
-  document.getElementById('modePill').textContent = state.sessionType === 'smart_review' ? 'RIPASSO INTELLIGENTE' : scoringLabel(state.scoring);
+  refreshModePill();
   document.getElementById('resumeBanner').classList.add('hidden');
   document.getElementById('setup').classList.add('hidden');
   document.getElementById('results').classList.add('hidden');
@@ -1863,7 +1870,7 @@ function importSession(event) {
       if (!state.optionOrders) {
         state.optionOrders = buildSessionOptionOrders(state.queue || [], state.mode || 'study');
       }
-      document.getElementById('modePill').textContent = data.sessionType === 'smart_review' ? 'RIPASSO INTELLIGENTE' : scoringLabel(state.scoring||'PARZIALE_LINEARE');
+      refreshModePill();
       document.getElementById('setup').classList.add('hidden');
       document.getElementById('resumeBanner').classList.add('hidden');
       document.getElementById('results').classList.add('hidden');
@@ -1897,6 +1904,15 @@ function buildChapterList() {
                      <span>${ch}. ${name}</span>
                      <span class="count">${n}</span>`;
     el.appendChild(div);
+  });
+}
+
+const modeSelectEl = document.getElementById('mode');
+if (modeSelectEl) {
+  modeSelectEl.addEventListener('change', () => {
+    state.mode = modeSelectEl.value;
+    state.sessionType = 'standard';
+    refreshModePill();
   });
 }
 
@@ -1979,7 +1995,7 @@ function startQuiz() {
   state.started = Date.now();
   state.sessionType = 'standard';
 
-  document.getElementById('modePill').textContent = scoringLabel(scoring);
+  refreshModePill();
   document.getElementById('setup').classList.add('hidden');
   document.getElementById('resumeBanner').classList.add('hidden');
   document.getElementById('results').classList.add('hidden');
@@ -1999,6 +2015,8 @@ function renderQuestion() {
   const saved = state.answers[idx] || [];
   const isChecked = !!state.checked[idx];
   const optionOrder = getQuestionOptionOrder(idx);
+
+  toggleQuizScoreVisibility();
 
   const container = document.getElementById('questionContainer');
   container.innerHTML = '';
@@ -2170,7 +2188,17 @@ function scoreOne(correctStr, given, scoring) {
   return { score, maxQ, nCorrect, nCorrectGiven, nWrongGiven };
 }
 
+function toggleQuizScoreVisibility() {
+  const wrap = document.getElementById('liveScoreWrap');
+  if (!wrap) return;
+  const hide = state.mode === 'exam';
+  wrap.style.display = hide ? 'none' : '';
+}
+
 function updateLiveScore() {
+  toggleQuizScoreVisibility();
+  if (state.mode === 'exam') return;
+
   let tot = 0, max = 0;
   state.queue.forEach(idx => {
     const q = QUESTIONS[idx];
@@ -2179,18 +2207,13 @@ function updateLiveScore() {
       return;
     }
     const given = state.answers[idx] || [];
-    if (state.mode === 'exam' && given.length === 0 && !state.checked[idx]) {
-      max += (state.scoring === 'NEGATIVO') ? q.a.length : 1;
-      return;
-    }
     const r = scoreOne(q.a, given, state.scoring);
     tot += r.score;
     max += r.maxQ;
   });
   const liveIsEsame = state.scoring === 'ESAME_UFFICIALE';
   document.getElementById('liveScore').textContent = liveIsEsame ? (tot * 0.5).toFixed(2) : tot.toFixed(2);
-  if (liveIsEsame) document.getElementById('liveMax').textContent = (max * 0.5).toFixed(2);
-  document.getElementById('liveMax').textContent = max;
+  document.getElementById('liveMax').textContent = liveIsEsame ? (max * 0.5).toFixed(2) : max;
 }
 
 // ====================================================================
@@ -2263,6 +2286,7 @@ function restart() {
   document.getElementById('results').classList.add('hidden');
   document.getElementById('setup').classList.remove('hidden');
   document.getElementById('reviewContainer').innerHTML = '';
+  toggleQuizScoreVisibility();
   checkForSavedSession();
   updateSmartReviewUI();
   renderChapterStats();
@@ -2440,6 +2464,7 @@ document.addEventListener('keydown', (e) => {
     if (!document.getElementById('checkBtn').classList.contains('hidden')) checkQ();
   }
 });
+
 </script>
 
 
@@ -2610,6 +2635,7 @@ function clearSyncBox() {
   if (qr) qr.innerHTML = '<span style="font-size:12px; color:var(--c-text-3); text-align:center; line-height:1.5;">QR disponibile dopo la generazione del codice</span>';
   refreshSyncPanel();
 }
+
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -2625,6 +2651,24 @@ function generateQR(text){
   });
 }
 refreshSyncPanel();
+
+function updateHeaderForView() {
+  const authors = document.getElementById('headerAuthors');
+  const loginScreen = document.getElementById('loginScreen');
+  if (!authors || !loginScreen) return;
+  const loginVisible = !loginScreen.classList.contains('hidden');
+  authors.style.display = loginVisible ? 'block' : 'none';
+  refreshModePill();
+}
+
+(function(){
+  const observer = new MutationObserver(() => updateHeaderForView());
+  const loginScreen = document.getElementById('loginScreen');
+  if (loginScreen) observer.observe(loginScreen, { attributes:true, attributeFilter:['class'] });
+  if (modeSelectEl) state.mode = modeSelectEl.value;
+  updateHeaderForView();
+})();
+
 </script>
 
 </body></html>
