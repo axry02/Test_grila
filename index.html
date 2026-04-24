@@ -13,11 +13,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="TEST Grilă">
 
-<link rel="apple-touch-icon" href="logo.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<!-- Versione offline: nessun font o script esterno. -->
 
 <style>
   :root {
@@ -44,8 +42,8 @@
     --c-yellow-dim: rgba(245,158,11,.1);
     --radius: 14px;
     --radius-sm: 8px;
-    --font: 'DM Sans', system-ui, sans-serif;
-    --font-display: 'Sora', system-ui, sans-serif;
+    --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-display: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
@@ -238,6 +236,7 @@
       font-size: 11px;
     }
   }
+
 
   /* ── LAYOUT ── */
   .container { max-width: 760px; margin: 0 auto; padding: 28px 16px 100px; }
@@ -961,12 +960,12 @@
         <div>
           <div style="font-size:11px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:var(--c-accent); font-family:var(--font-display);">Sincronizzazione manuale</div>
           <h3 style="margin:6px 0 0;">🔄 Sincronizza i tuoi progressi</h3>
-          <div class="form-desc" style="margin:8px 0 0; max-width:620px;">Usa questa sezione per trasferire lo stesso avanzamento tra telefono, tablet e computer. Il codice e il QR appartengono all'utente attualmente loggato e comprendono statistiche, ripasso intelligente e sessione salvata.</div>
+          <div class="form-desc" style="margin:8px 0 0; max-width:620px;">Usa questa sezione per trasferire lo stesso avanzamento tra telefono, tablet e computer. Il codice appartiene all'utente attualmente loggato e comprendono statistiche, ripasso intelligente e sessione salvata.</div>
         </div>
       </div>
 
       <div style="display:flex; gap:14px; flex-wrap:wrap; margin-top:18px;">
-        <button onclick="exportSync()">📤 Genera codice e QR</button>
+        <button onclick="exportSync()">📤 Genera codice</button>
         <button class="secondary" onclick="copySyncCode()">📋 Copia codice</button>
         <button class="secondary" onclick="importSync()">📥 Applica sincronizzazione</button>
         <button class="ghost" onclick="clearSyncBox()">Pulisci</button>
@@ -981,9 +980,6 @@
           <div id="syncStatus" class="admin-note" style="margin-top:0; background:var(--c-surface2); border-color:var(--c-border); color:var(--c-text-2);">
             Genera un codice sul dispositivo sorgente oppure incolla qui un codice ricevuto per importarlo.
           </div>
-        </div>
-        <div style="min-width:170px;">
-          <div id="qrBox" style="min-height:150px; display:flex; align-items:center; justify-content:center; padding:10px; background:var(--c-surface2); border:1px solid var(--c-border-soft); border-radius:14px;"></div>
         </div>
       </div>
     </div>
@@ -2512,7 +2508,6 @@ function updateSyncStatus(message, variant) {
 
 function refreshSyncPanel() {
   const meta = document.getElementById('syncMeta');
-  const qr = document.getElementById('qrBox');
   if (!meta) return;
   const data = getAccessData();
   const user = data.currentUser || 'utente corrente';
@@ -2528,9 +2523,6 @@ function refreshSyncPanel() {
   const smartCount = smart && Array.isArray(smart.queue) ? smart.queue.length : 0;
   const hasSession = !!(session && Array.isArray(session.queue) && session.queue.length);
   meta.innerHTML = `Utente selezionato: <b>${escapeHtml(user)}</b> · Quiz salvati: <b>${quizzes}</b> · Domande uniche registrate: <b>${uniqueQuestions.size}</b> · Ripasso intelligente: <b>${smartCount}</b> · Sessione in sospeso: <b>${hasSession ? 'sì' : 'no'}</b>`;
-  if (qr && !document.getElementById('syncBox').value.trim()) {
-    qr.innerHTML = '<span style="font-size:12px; color:var(--c-text-3); text-align:center; line-height:1.5;">QR disponibile dopo la generazione del codice</span>';
-  }
   if (!document.getElementById('syncBox').value.trim()) {
     updateSyncStatus('Genera un codice sul dispositivo sorgente oppure incolla qui un codice ricevuto per importarlo.', 'neutral');
   }
@@ -2544,9 +2536,8 @@ function exportSync() {
   const payload = getSyncPayload();
   const encoded = encodeBase64Utf8(payload);
   document.getElementById('syncBox').value = encoded;
-  generateQR(encoded);
   const exportedAt = new Date(payload.exportedAt).toLocaleString('it-IT');
-  updateSyncStatus(`Codice generato correttamente per <b>${escapeHtml(payload.user || 'utente corrente')}</b> il <b>${exportedAt}</b>. Ora puoi copiarlo o inquadrarlo dall'altro dispositivo.`, 'ok');
+  updateSyncStatus(`Codice generato correttamente per <b>${escapeHtml(payload.user || 'utente corrente')}</b> il <b>${exportedAt}</b>. Ora puoi copiarlo e incollarlo sull'altro dispositivo.`, 'ok');
   refreshSyncPanel();
 }
 
@@ -2631,25 +2622,12 @@ function importSync() {
 function clearSyncBox() {
   const field = document.getElementById('syncBox');
   if (field) field.value = '';
-  const qr = document.getElementById('qrBox');
-  if (qr) qr.innerHTML = '<span style="font-size:12px; color:var(--c-text-3); text-align:center; line-height:1.5;">QR disponibile dopo la generazione del codice</span>';
   refreshSyncPanel();
 }
 
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-function generateQR(text){
-  const container = document.getElementById("qrBox");
-  if (!container) return;
-  container.innerHTML = "";
-  new QRCode(container, {
-    text: text,
-    width: 150,
-    height: 150
-  });
-}
 refreshSyncPanel();
 
 function updateHeaderForView() {
@@ -2669,6 +2647,19 @@ function updateHeaderForView() {
   updateHeaderForView();
 })();
 
+</script>
+
+<script>
+(function registerOfflineSupport(){
+  if (!('serviceWorker' in navigator)) return;
+  const isLocalFile = location.protocol === 'file:';
+  if (isLocalFile) return;
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(() => {
+      // Se il file viene aperto come HTML singolo, l'app resta comunque usabile offline.
+    });
+  });
+})();
 </script>
 
 </body></html>
