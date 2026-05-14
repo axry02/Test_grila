@@ -2036,50 +2036,13 @@ function saveSmartReview(data) {
 }
 
 function clearSmartReview() {
+  if (!confirm('Azzera tutta la cronologia del ripasso intelligente?')) return;
   if (LS_OK) {
     try { localStorage.removeItem(getSmartReviewStorageKey()); } catch(e) {}
   }
   updateSmartReviewUI();
-}
-
-function updateSmartReviewUI() {
-  const box = document.getElementById('smartReviewBox');
-  const info = document.getElementById('smartReviewInfo');
-  const btn = document.getElementById('smartReviewBtn');
-  const data = loadSmartReview();
-  const total = ((data && data.queue) ? data.queue.length : 0);
-  if (!data || !Array.isArray(data.queue) || total === 0) {
-    if (box) box.classList.add('hidden');
-    if (btn) btn.classList.add('hidden');
-    if (info) info.textContent = '';
-    return;
-  }
-  const when = data.savedAt ? new Date(data.savedAt).toLocaleString('it-IT') : '';
-  const wrong = Array.isArray(data.wrong) ? data.wrong.length : 0;
-  const partial = Array.isArray(data.partial) ? data.partial.length : 0;
-  if (info) {
-    info.textContent = `Ultimo set salvato il ${when} · ${total} domande da ripassare (${wrong} sbagliate, ${partial} parziali).`;
-  }
-  if (box) box.classList.remove('hidden');
-  if (btn) btn.classList.remove('hidden');
-}
-
-function buildSmartReviewPayload(wrong, partial, scoring) {
-  const uniq = [];
-  const seen = new Set();
-  [...wrong, ...partial].forEach(idx => {
-    if (!seen.has(idx)) {
-      seen.add(idx);
-      uniq.push(idx);
-    }
-  });
-  return {
-    queue: uniq,
-    wrong: [...wrong],
-    partial: [...partial],
-    scoring,
-    savedAt: Date.now()
-  };
+  const page = document.getElementById('smartReviewPage');
+  if (page && !page.classList.contains('hidden')) renderSmartReviewPage('all');
 }
 
 function modeLabel(mode) {
@@ -2097,35 +2060,6 @@ function refreshModePill() {
   }
   pill.classList.remove('hidden');
   pill.textContent = state.sessionType === 'smart_review' ? 'RIPASSO INTELLIGENTE' : modeLabel(state.mode || 'study');
-}
-
-function startSmartReview() {
-  const data = loadSmartReview();
-  if (!data || !Array.isArray(data.queue) || data.queue.length === 0) {
-    alert('Non ci sono domande da ripassare al momento.');
-    updateSmartReviewUI();
-    return;
-  }
-  state.queue = [...data.queue];
-  state.current = 0;
-  state.answers = {};
-  state.checked = {};
-  state.optionOrders = buildSessionOptionOrders(state.queue, 'study');
-  state.mode = 'study';
-  state.scoring = data.scoring || 'PARZIALE_LINEARE';
-  state.started = Date.now();
-  state.sessionType = 'smart_review';
-
-  refreshModePill();
-  document.getElementById('setup').classList.add('hidden');
-  document.getElementById('resumeBanner').classList.add('hidden');
-  document.getElementById('results').classList.add('hidden');
-  document.getElementById('quiz').classList.remove('hidden');
-  document.getElementById('totNum').textContent = state.queue.length;
-  toggleQuizScoreVisibility();
-
-  saveState();
-  renderQuestion();
 }
 
 function checkForSavedSession() {
@@ -2155,10 +2089,8 @@ function resumeSaved() {
   document.getElementById('results').classList.add('hidden');
   document.getElementById('quiz').classList.remove('hidden');
   document.getElementById('totNum').textContent = state.queue.length;
+  toggleQuizScoreVisibility();
   renderQuestion();
-}
-
-function discardSaved() {
   if (!confirm('Cancellare la sessione salvata? Non potrai recuperarla.')) return;
   clearSavedState();
   state = { queue: [], current: 0, answers: {}, checked: {}, optionOrders: {}, mode: 'study', scoring: 'PARZIALE_LINEARE', started: null, sessionType: 'standard' };
@@ -2198,6 +2130,7 @@ function importSession(event) {
       document.getElementById('results').classList.add('hidden');
       document.getElementById('quiz').classList.remove('hidden');
       document.getElementById('totNum').textContent = state.queue.length;
+      toggleQuizScoreVisibility();
       renderQuestion();
       saveState();
     } catch(err) {
@@ -2813,11 +2746,17 @@ document.addEventListener('keydown', (e) => {
 <script>
 function encodeBase64Utf8(obj) {
   const json = typeof obj === 'string' ? obj : JSON.stringify(obj);
-  return btoa(unescape(encodeURIComponent(json)));
+  const bytes = new TextEncoder().encode(json);
+  let binary = '';
+  bytes.forEach(b => { binary += String.fromCharCode(b); });
+  return btoa(binary);
 }
 
 function decodeBase64Utf8(value) {
-  return decodeURIComponent(escape(atob(String(value || '').trim())));
+  const binary = atob(String(value || '').trim());
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
 }
 
 function getSyncPayload() {
@@ -3292,16 +3231,7 @@ function markVisibleSmartAsLearned(filter='all') {
   updateSmartReviewUI();
 }
 
-const originalClearSmartReview = clearSmartReview;
-clearSmartReview = function() {
-  if (!confirm('Azzera tutta la cronologia del ripasso intelligente?')) return;
-  if (LS_OK) {
-    try { localStorage.removeItem(getSmartReviewStorageKey()); } catch(e) {}
-  }
-  updateSmartReviewUI();
-  const page = document.getElementById('smartReviewPage');
-  if (page && !page.classList.contains('hidden')) renderSmartReviewPage('all');
-};
+
 </script>
 
 <script>
