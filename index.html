@@ -1396,12 +1396,6 @@
 
   </div>
 
-    <div class="simple-footer">
-      <div>Progetto ideato da <strong>Adriana Accetta</strong> e <strong>Dario Ciancio</strong></div>
-      <div class="copyright">© 2026 Tutti i diritti riservati</div>
-    </div>
-
-
   <!-- SCHERMATA RIPASSO INTELLIGENTE EVOLUTO -->
   <div id="smartReviewPage" class="panel smart-page-shell hidden">
     <h2 style="margin:0; font-size:30px;">Ripasso domande deboli</h2>
@@ -1443,6 +1437,11 @@
       </div>
     </div>
   </div>
+
+    <div id="appFooter" class="simple-footer">
+      <div>Progetto ideato da <strong>Adriana Accetta</strong> e <strong>Dario Ciancio</strong></div>
+      <div class="copyright">© 2026 Tutti i diritti riservati</div>
+    </div>
 
   <!-- SCHERMATA QUIZ -->
   <div id="quiz" class="hidden">
@@ -2249,6 +2248,7 @@ function checkForSavedSession() {
 }
 
 function resumeSaved() {
+  setAppFooterVisible(false);
   const saved = loadState();
   if (!saved) return;
   state = saved;
@@ -2406,6 +2406,7 @@ function getQuestionOptionOrder(idx) {
 // AVVIO QUIZ
 // ====================================================================
 function startQuiz() {
+  setAppFooterVisible(false);
   const chapters = getSelectedChapters();
   if (chapters.length === 0) { alert('Seleziona almeno un capitolo!'); return; }
 
@@ -2676,6 +2677,7 @@ function updateLiveScore() {
 // FINE QUIZ
 // ====================================================================
 function finishQuiz() {
+  setAppFooterVisible(false);
   if (state.mode === 'exam') {
     state.queue.forEach(idx => state.checked[idx] = true);
   }
@@ -3367,6 +3369,11 @@ function updateSmartReviewUI() {
 }
 
 
+function setAppFooterVisible(visible) {
+  const footer = document.getElementById('appFooter');
+  if (footer) footer.classList.toggle('hidden', !visible);
+}
+
 function updateMainTabs(active='setup') {
   const tabs = document.getElementById('mainTabs');
   if (tabs) tabs.classList.remove('hidden');
@@ -3385,6 +3392,7 @@ function updateMainTabs(active='setup') {
 }
 
 function showSetupTab() {
+  setAppFooterVisible(true);
   document.getElementById('smartReviewPage').classList.add('hidden');
   const progressPage = document.getElementById('progressPage');
   if (progressPage) progressPage.classList.add('hidden');
@@ -3399,6 +3407,7 @@ function showSetupTab() {
 }
 
 function showProgressTab() {
+  setAppFooterVisible(true);
   updateMainTabs('progress');
   document.getElementById('setup').classList.add('hidden');
   document.getElementById('smartReviewPage').classList.add('hidden');
@@ -3414,6 +3423,7 @@ function showProgressTab() {
 }
 
 function openSmartReviewPage(filter='all') {
+  setAppFooterVisible(true);
   updateMainTabs('smart');
   document.getElementById('setup').classList.add('hidden');
   const progressPage = document.getElementById('progressPage');
@@ -3427,6 +3437,7 @@ function openSmartReviewPage(filter='all') {
 }
 
 function backToSetupFromSmartReview() {
+  setAppFooterVisible(true);
   updateMainTabs('setup');
   document.getElementById('smartReviewPage').classList.add('hidden');
   const progressPage = document.getElementById('progressPage');
@@ -3518,6 +3529,7 @@ function getSmartReviewQueue(filter='all', value=null) {
 }
 
 function startSmartReview(filter='all', value=null) {
+  setAppFooterVisible(false);
   const queue = getSmartReviewQueue(filter, value);
   if (!queue.length) {
     alert('Non ci sono domande da ripassare con questo filtro.');
