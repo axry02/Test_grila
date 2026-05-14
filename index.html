@@ -1311,18 +1311,12 @@
 
   <!-- SCHERMATA PROGRESSO -->
   <div id="progressPage" class="hidden">
-    <div class="panel form-title">
-      <h2 style="margin-top:0;">Progresso</h2>
-      <div class="form-desc">Qui trovi il progresso totale, le statistiche per capitolo e la sincronizzazione manuale tra dispositivi.</div>
-    </div>
-
-    <div id="overallProgressPanel" class="panel" style="margin-top:16px; border:2px solid rgba(76,110,245,.22); box-shadow:0 14px 34px rgba(76,110,245,.09); overflow:hidden;" data-prev-pct="0.864304235090752" data-prev-done="10" data-prev-remaining="1147">
+    <div id="overallProgressPanel" class="panel" style="margin-top:0; border:2px solid rgba(76,110,245,.22); box-shadow:0 14px 34px rgba(76,110,245,.09); overflow:hidden;" data-prev-pct="0.864304235090752" data-prev-done="10" data-prev-remaining="1147">
       <div style="position:absolute; inset:0 0 auto 0; height:4px; background:linear-gradient(90deg, var(--c-accent), #a78bfa, var(--c-green));"></div>
       <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; position:relative; z-index:1;">
         <div>
-          <div style="font-size:11px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:var(--c-accent); font-family:var(--font-display);">Dashboard progresso</div>
-          <h3 style="margin:6px 0 0;">🎯 Progresso totale utente</h3>
-          <div class="form-desc" style="margin:8px 0 0; max-width:520px;">Avanzamento personale sulle 1157 domande totali, calcolato sulle domande uniche già affrontate da questo utente.</div>
+          <div style="font-size:11px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:var(--c-accent); font-family:var(--font-display);">Dashboard</div>
+          <h3 style="margin:6px 0 0;">🎯 Il tuo progresso</h3>
         </div>
       </div>
       <div id="overallProgressBox" style="margin-top:18px; display:flex; align-items:center; gap:28px; flex-wrap:wrap; position:relative; z-index:1;">
@@ -1333,7 +1327,7 @@
           </div>
         </div>
         <div style="flex:1; min-width:240px;">
-          <div id="overallProgressText" style="font-size:15px; color:var(--c-text); line-height:1.6;">Hai affrontato <b>10</b> domande uniche su <b>1157</b>. Continua così: te ne mancano <b>1147</b> per completare l'intero database.</div>
+          <div id="overallProgressText" style="font-size:15px; color:var(--c-text); line-height:1.6;"><b>10</b> domande completate su <b>1157</b>. Restano <b>1147</b> domande.</div>
           <div class="progress-bar" style="margin-top:14px; height:10px; background:#e8ecf7;"><div id="overallProgressFill" style="width: 0.9%;"></div></div>
           <div style="display:flex; gap:14px; flex-wrap:wrap; margin-top:16px;">
             <div style="min-width:110px; padding:12px 14px; border:1px solid var(--c-border-soft); border-radius:14px; background:var(--c-surface2);">
@@ -1357,7 +1351,7 @@
       <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;">
         <div>
           <h3 style="margin:0;">📊 Statistiche per capitolo</h3>
-          <div class="form-desc" style="margin:6px 0 0;">Andamento storico personale per capitolo, basato sui quiz completati da questo utente e sincronizzabile manualmente tra dispositivi.</div>
+          <div class="form-desc" style="margin:6px 0 0;">Risultati salvati per ciascun capitolo.</div>
         </div>
         <button class="ghost" onclick="resetChapterStats()">🗑 Reset statistiche</button>
       </div>
@@ -1370,7 +1364,7 @@
         <div>
           <div style="font-size:11px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:var(--c-accent); font-family:var(--font-display);">Sincronizzazione manuale</div>
           <h3 style="margin:6px 0 0;">🔄 Sincronizza i tuoi progressi</h3>
-          <div class="form-desc" style="margin:8px 0 0; max-width:620px;">Usa questa sezione per trasferire lo stesso avanzamento tra telefono, tablet e computer. Il codice appartiene all'utente attualmente loggato e comprendono statistiche, ripasso intelligente e sessione salvata.</div>
+          <div class="form-desc" style="margin:8px 0 0; max-width:620px;">Trasferisci i dati tra telefono, tablet e computer.</div>
         </div>
       </div>
 
@@ -1395,7 +1389,6 @@
     </div>
 
   </div>
-
   <!-- SCHERMATA RIPASSO INTELLIGENTE EVOLUTO -->
   <div id="smartReviewPage" class="panel smart-page-shell hidden">
     <h2 style="margin:0; font-size:30px;">Ripasso domande deboli</h2>
@@ -1437,11 +1430,6 @@
       </div>
     </div>
   </div>
-
-    <div id="appFooter" class="simple-footer">
-      <div>Progetto ideato da <strong>Adriana Accetta</strong> e <strong>Dario Ciancio</strong></div>
-      <div class="copyright">© 2026 Tutti i diritti riservati</div>
-    </div>
 
   <!-- SCHERMATA QUIZ -->
   <div id="quiz" class="hidden">
@@ -1530,10 +1518,13 @@
       <div id="reviewContainer"></div>
 
     </div>
-    <div class="simple-footer">
-      <div>Progetto ideato da <strong>Adriana Accetta</strong> e <strong>Dario Ciancio</strong></div>
-      <div class="copyright">© 2026 Tutti i diritti riservati</div>
-    </div>
+  </div>
+
+
+
+  <div class="simple-footer" id="appFooter">
+    <div>Progetto ideato da <strong>Adriana Accetta</strong> e <strong>Dario Ciancio</strong></div>
+    <div class="copyright">© 2026 Tutti i diritti riservati</div>
   </div>
 
   </div><!-- /#mainApp -->
@@ -2074,7 +2065,7 @@ function renderChapterStats() {
   `;
 
   if (progressTextEl) {
-    progressTextEl.innerHTML = `Hai affrontato <b>${uniqueDone}</b> domande uniche su <b>${totalAvailableQuestions}</b>. Continua così: te ne mancano <b>${totalAvailableQuestions - uniqueDone}</b> per completare l'intero database.`;
+    progressTextEl.innerHTML = `<b>${uniqueDone}</b> domande completate su <b>${totalAvailableQuestions}</b>. Restano <b>${totalAvailableQuestions - uniqueDone}</b> domande.`;
   }
   if (progressDoneEl) progressDoneEl.textContent = String(uniqueDone);
   if (progressRemainingEl) progressRemainingEl.textContent = String(totalAvailableQuestions - uniqueDone);
@@ -2248,7 +2239,6 @@ function checkForSavedSession() {
 }
 
 function resumeSaved() {
-  setAppFooterVisible(false);
   const saved = loadState();
   if (!saved) return;
   state = saved;
@@ -2406,7 +2396,6 @@ function getQuestionOptionOrder(idx) {
 // AVVIO QUIZ
 // ====================================================================
 function startQuiz() {
-  setAppFooterVisible(false);
   const chapters = getSelectedChapters();
   if (chapters.length === 0) { alert('Seleziona almeno un capitolo!'); return; }
 
@@ -2677,7 +2666,6 @@ function updateLiveScore() {
 // FINE QUIZ
 // ====================================================================
 function finishQuiz() {
-  setAppFooterVisible(false);
   if (state.mode === 'exam') {
     state.queue.forEach(idx => state.checked[idx] = true);
   }
@@ -3369,11 +3357,6 @@ function updateSmartReviewUI() {
 }
 
 
-function setAppFooterVisible(visible) {
-  const footer = document.getElementById('appFooter');
-  if (footer) footer.classList.toggle('hidden', !visible);
-}
-
 function updateMainTabs(active='setup') {
   const tabs = document.getElementById('mainTabs');
   if (tabs) tabs.classList.remove('hidden');
@@ -3392,7 +3375,6 @@ function updateMainTabs(active='setup') {
 }
 
 function showSetupTab() {
-  setAppFooterVisible(true);
   document.getElementById('smartReviewPage').classList.add('hidden');
   const progressPage = document.getElementById('progressPage');
   if (progressPage) progressPage.classList.add('hidden');
@@ -3407,7 +3389,6 @@ function showSetupTab() {
 }
 
 function showProgressTab() {
-  setAppFooterVisible(true);
   updateMainTabs('progress');
   document.getElementById('setup').classList.add('hidden');
   document.getElementById('smartReviewPage').classList.add('hidden');
@@ -3423,7 +3404,6 @@ function showProgressTab() {
 }
 
 function openSmartReviewPage(filter='all') {
-  setAppFooterVisible(true);
   updateMainTabs('smart');
   document.getElementById('setup').classList.add('hidden');
   const progressPage = document.getElementById('progressPage');
@@ -3437,7 +3417,6 @@ function openSmartReviewPage(filter='all') {
 }
 
 function backToSetupFromSmartReview() {
-  setAppFooterVisible(true);
   updateMainTabs('setup');
   document.getElementById('smartReviewPage').classList.add('hidden');
   const progressPage = document.getElementById('progressPage');
@@ -3529,7 +3508,6 @@ function getSmartReviewQueue(filter='all', value=null) {
 }
 
 function startSmartReview(filter='all', value=null) {
-  setAppFooterVisible(false);
   const queue = getSmartReviewQueue(filter, value);
   if (!queue.length) {
     alert('Non ci sono domande da ripassare con questo filtro.');
