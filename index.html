@@ -935,8 +935,6 @@
   .weak-fill.blue { background: var(--c-accent); }
   .smart-table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .smart-table th, .smart-table td { padding: 11px 10px; text-align: left; border-bottom: 1px solid var(--c-border-soft); vertical-align: middle; }
-  .smart-table td:first-child, .smart-table th:first-child { padding-right: 4px; width: 32px; }
-  .smart-row-check, .smart-table #smartSelectAll { width: 16px; height: 16px; cursor: pointer; accent-color: var(--c-accent); }
   .smart-table th { color: var(--c-text-2); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
   .smart-status-badge { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; white-space: nowrap; }
   .smart-table button { padding: 7px 11px; font-size: 12px; }
@@ -3170,27 +3168,11 @@ function renderSmartReviewPage(filter='all') {
     if (!visible.length) {
       tableEl.innerHTML = '<div class="smart-empty">Non ci sono domande da ripassare con questo filtro.</div>';
     } else {
-      const rows = visible.slice(0, 12);
-      tableEl.innerHTML = `<table class="smart-table"><thead><tr><th style="width:28px;"><input type="checkbox" id="smartSelectAll" title="Seleziona tutte" onchange="toggleAllSmartCheckboxes(this)"></th><th>Domanda</th><th>Capitolo</th><th>Stato</th><th>Conteggio</th><th>Ultimo errore</th><th>Azione</th></tr></thead><tbody>${rows.map(item => {
+      tableEl.innerHTML = `<table class="smart-table"><thead><tr><th>Domanda</th><th>Capitolo</th><th>Stato</th><th>Conteggio</th><th>Ultimo errore</th><th>Azione</th></tr></thead><tbody>${visible.slice(0, 12).map(item => {
         const when = item.lastAt ? new Date(item.lastAt).toLocaleDateString('it-IT') : '—';
         const countText = `${item.wrong || 0} errori · ${item.partial || 0} parziali`;
-        const chapterName = CHAPTERS[String(item.q.c)] || ('Cap ' + item.q.c);
-        const shortChapter = escapeHtml(chapterName.length > 28 ? chapterName.slice(0, 26) + '…' : chapterName);
-        return `<tr><td><input type="checkbox" class="smart-row-check" data-idx="${item.idx}"></td><td><b>Cap ${item.q.c} · Dom ${item.q.n}</b></td><td title="${escapeHtml(chapterName)}">${shortChapter}</td><td><span class="smart-status-badge ${item.meta.color}">${item.meta.label}</span></td><td>${countText}</td><td>${when}</td><td><button onclick="startSmartReview('single', ${item.idx})">Ripassa ora</button></td></tr>`;
-      }).join('')}</tbody></table><div style="display:flex; gap:10px; justify-content:flex-end; margin-top:12px; flex-wrap:wrap;"><button class="ghost" onclick="markSelectedSmartAsLearned('${filter}')" id="btnMarkLearned" disabled style="opacity:.5;">✓ Segna selezionate come imparate</button></div>`;\n      // enable button only when at least one checkbox is checked
-      tableEl.querySelectorAll('.smart-row-check').forEach(cb => {
-        cb.addEventListener('change', () => {
-          const any = tableEl.querySelectorAll('.smart-row-check:checked').length > 0;
-          const btn = tableEl.querySelector('#btnMarkLearned');
-          if (btn) { btn.disabled = !any; btn.style.opacity = any ? '1' : '.5'; }
-          const all = tableEl.querySelectorAll('.smart-row-check').length;
-          const checked = tableEl.querySelectorAll('.smart-row-check:checked').length;
-          const selectAll = tableEl.querySelector('#smartSelectAll');
-          if (selectAll) selectAll.indeterminate = checked > 0 && checked < all;
-          if (selectAll && checked === 0) selectAll.checked = false;
-          if (selectAll && checked === all) selectAll.checked = true;
-        });
-      });
+        return `<tr><td><b>Domanda ${item.q.n}</b></td><td>Cap ${item.q.c}</td><td><span class="smart-status-badge ${item.meta.color}">${item.meta.label}</span></td><td>${countText}</td><td>${when}</td><td><button onclick="startSmartReview('single', ${item.idx})">Ripassa ora</button></td></tr>`;
+      }).join('')}</tbody></table><div style="text-align:center; margin-top:12px;"><button class="ghost" onclick="markVisibleSmartAsLearned('${filter}')">Segna visibili come imparate</button></div>`;
     }
   }
 }
@@ -3233,26 +3215,13 @@ function startSmartReview(filter='all', value=null) {
   renderQuestion();
 }
 
-function toggleAllSmartCheckboxes(masterCb) {
-  const table = document.getElementById('smartQuestionTable');
-  if (!table) return;
-  table.querySelectorAll('.smart-row-check').forEach(cb => { cb.checked = masterCb.checked; });
-  const any = masterCb.checked;
-  const btn = table.querySelector('#btnMarkLearned');
-  if (btn) { btn.disabled = !any; btn.style.opacity = any ? '1' : '.5'; }
-}
-
-function markSelectedSmartAsLearned(filter='all') {
-  const table = document.getElementById('smartQuestionTable');
-  if (!table) return;
-  const checked = Array.from(table.querySelectorAll('.smart-row-check:checked'));
-  if (!checked.length) return;
-  const idxList = checked.map(cb => Number(cb.dataset.idx));
-  const n = idxList.length;
-  if (!confirm(`Segnare ${n === 1 ? 'questa domanda' : 'queste ' + n + ' domande'} come imparate? Non compariranno più nel ripasso intelligente, salvo nuovi errori.`)) return;
+function markVisibleSmartAsLearned(filter='all') {
   const data = migrateSmartReviewData(loadSmartReview());
-  idxList.forEach(idx => {
-    const key = String(idx);
+  const visible = deriveSmartReviewItems(data, filter === 'chapter' ? 'all' : filter).slice(0, 12);
+  if (!visible.length) return;
+  if (!confirm('Segnare queste domande come imparate? Non compariranno più nel ripasso intelligente, salvo nuovi errori.')) return;
+  visible.forEach(item => {
+    const key = String(item.idx);
     if (data.items[key]) data.items[key].learned = true;
   });
   data.savedAt = Date.now();
@@ -3260,13 +3229,6 @@ function markSelectedSmartAsLearned(filter='all') {
   saveSmartReview(data);
   renderSmartReviewPage(filter);
   updateSmartReviewUI();
-}
-
-function markVisibleSmartAsLearned(filter='all') {
-  // kept for backward compatibility — delegates to selection-based version after selecting all
-  const table = document.getElementById('smartQuestionTable');
-  if (table) table.querySelectorAll('.smart-row-check').forEach(cb => { cb.checked = true; });
-  markSelectedSmartAsLearned(filter);
 }
 
 
