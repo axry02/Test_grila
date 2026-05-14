@@ -1,4 +1,4 @@
-const CACHE_NAME = 'test-grila-logo-header-pulito-v1';
+const CACHE_NAME = 'test-grila-home-ripasso-progresso-v1';
 const ASSETS = [
   './',
   './index.html',

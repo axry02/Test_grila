@@ -190,6 +190,7 @@
     min-width: 0;
   }
 
+  .brand-logo { display: none !important; }
   .brand-logo {
     width: 44px;
     height: 44px;
@@ -990,11 +991,81 @@
   .smart-how-step b { display: block; color: var(--c-text); margin-bottom: 3px; }
   .smart-empty { padding: 18px; color: var(--c-text-2); background: var(--c-surface2); border-radius: 12px; text-align: center; }
 
+
+  /* ── MAIN TABS: HOME / RIPASSO / PROGRESSO ── */
+  .app-tabs {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 0 0 14px;
+    padding: 6px;
+    background: rgba(255,255,255,.72);
+    border: 1px solid var(--c-border-soft);
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(26,31,54,.035);
+  }
+  .app-tab {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    color: var(--c-text-2);
+    border-radius: 12px;
+    padding: 12px 10px;
+    font-weight: 800;
+    box-shadow: none;
+    text-align: center;
+  }
+  .app-tab:hover { background: var(--c-surface2); box-shadow: none; }
+  .app-tab.active {
+    background: var(--c-accent);
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(76,110,245,.18);
+  }
+  .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    margin-left: 7px;
+    padding: 0 7px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.22);
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .app-tab:not(.active) .tab-count { background: var(--c-accent-dim); color: var(--c-accent); }
+
+  .smart-select-cell { width: 42px; text-align: center !important; }
+  .smart-select-check {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--c-accent);
+    cursor: pointer;
+  }
+  .smart-selection-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-top: 14px;
+  }
+  .smart-selection-note {
+    width: 100%;
+    text-align: center;
+    color: var(--c-text-2);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
   @media (max-width: 700px) {
     .smart-metrics, .smart-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .weak-row { grid-template-columns: 1fr; }
     .smart-table { display: block; overflow-x: auto; white-space: nowrap; }
     .smart-how { grid-template-columns: 1fr; }
+    .app-tabs { margin: 0 0 12px; padding: 5px; }
+    .app-tab { padding: 10px 6px; font-size: 13px; }
     .question-map-grid { grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); }
     .question-map-item { min-height: 38px; font-size: 12px; }
   }
@@ -1054,19 +1125,12 @@
 
 <header id="appHeader">
   <div class="header-left">
-    <div class="brand-wrap">
-      <img class="brand-logo" src="./logo.png?v=20260514-logo2" alt="Logo TEST Grilă">
-      <div class="brand-text">
-        <div class="header-topline">
-          <h1><span class="desktop-title">TEST Grilă</span><span class="mobile-title">Quiz Medicina</span></h1>
-          <span class="mode-pill hidden" id="modePill">MODALITÀ STUDIO</span>
-        </div>
-        <div class="sub sub-main desktop-sub">Quiz Medicina — Grile Licenta 2021 • 1157 domande</div>
-        <div class="sub sub-main mobile-sub">Grile Licenta 2021 — 1157 domande</div>
-        <div class="sub sub-authors" id="headerAuthors">Creato da <b>Adriana Accetta</b> &amp; <b>Dario Ciancio</b></div>
-        <div class="sub sub-access">Piattaforma di training — accesso riservato</div>
-      </div>
+    <div class="header-topline">
+      <h1>Quiz Medicina</h1>
+      <span class="mode-pill hidden" id="modePill">MODALITÀ STUDIO</span>
     </div>
+    <div class="sub sub-main">Grile Licenta 2021 — 1157 domande</div>
+    <div class="sub sub-access">Piattaforma di training — accesso riservato</div>
   </div>
   <div id="userBar" class="hidden">
     <span id="currentUserBadge">👤 caio</span>
@@ -1168,6 +1232,12 @@
   <!-- APP PRINCIPALE (quiz) -->
   <div id="mainApp" class="hidden">
 
+  <div id="mainTabs" class="app-tabs">
+    <button id="tabSetup" class="app-tab active" onclick="showSetupTab()">Home</button>
+    <button id="tabSmart" class="app-tab" onclick="openSmartReviewPage('all')">Ripasso <span id="tabSmartCount" class="tab-count hidden">0</span></button>
+    <button id="tabProgress" class="app-tab" onclick="showProgressTab()">Progresso</button>
+  </div>
+
   <!-- BANNER SESSIONE SALVATA -->
   <div id="resumeBanner" class="panel hidden" style="background:#fff8e0; border-left:5px solid #c8a000;">
     <b>💾 Hai una sessione salvata</b>
@@ -1235,6 +1305,15 @@
         </div>
       </div>
       <div id="smartReviewMiniStats" class="smart-metrics"></div>
+    </div>
+
+  </div>
+
+  <!-- SCHERMATA PROGRESSO -->
+  <div id="progressPage" class="hidden">
+    <div class="panel form-title">
+      <h2 style="margin-top:0;">Progresso</h2>
+      <div class="form-desc">Qui trovi il progresso totale, le statistiche per capitolo e la sincronizzazione manuale tra dispositivi.</div>
     </div>
 
     <div id="overallProgressPanel" class="panel" style="margin-top:16px; border:2px solid rgba(76,110,245,.22); box-shadow:0 14px 34px rgba(76,110,245,.09); overflow:hidden;" data-prev-pct="0.864304235090752" data-prev-done="10" data-prev-remaining="1147">
@@ -1315,19 +1394,18 @@
       </div>
     </div>
 
+  </div>
+
     <div class="simple-footer">
       <div>Progetto ideato da <strong>Adriana Accetta</strong> e <strong>Dario Ciancio</strong></div>
       <div class="copyright">© 2026 Tutti i diritti riservati</div>
     </div>
 
-  </div>
-
 
   <!-- SCHERMATA RIPASSO INTELLIGENTE EVOLUTO -->
   <div id="smartReviewPage" class="panel smart-page-shell hidden">
-    <button class="smart-back" onclick="backToSetupFromSmartReview()">← Torna alla home</button>
-    <h2 style="margin:0; font-size:30px;">Ripasso intelligente</h2>
-    <div class="form-desc" style="font-size:15px; margin-top:8px;">Basato sulla cronologia completa dei quiz svolti, non solo sull’ultimo quiz.</div>
+    <h2 style="margin:0; font-size:30px;">Ripasso domande deboli</h2>
+    <div class="form-desc" style="font-size:15px; margin-top:8px;">Qui trovi gli errori e le risposte parziali della cronologia completa, organizzati per capitolo.</div>
 
     <div id="smartReviewStats" class="smart-stat-grid"></div>
 
@@ -2180,6 +2258,8 @@ function resumeSaved() {
   refreshModePill();
   document.getElementById('resumeBanner').classList.add('hidden');
   document.getElementById('setup').classList.add('hidden');
+  const progressPage = document.getElementById('progressPage');
+  if (progressPage) progressPage.classList.add('hidden');
   document.getElementById('results').classList.add('hidden');
   document.getElementById('quiz').classList.remove('hidden');
   document.getElementById('totNum').textContent = state.queue.length;
@@ -2220,6 +2300,8 @@ function importSession(event) {
       }
       refreshModePill();
       document.getElementById('setup').classList.add('hidden');
+      const progressPage = document.getElementById('progressPage');
+      if (progressPage) progressPage.classList.add('hidden');
       document.getElementById('resumeBanner').classList.add('hidden');
       document.getElementById('results').classList.add('hidden');
       document.getElementById('quiz').classList.remove('hidden');
@@ -2362,7 +2444,11 @@ function startQuiz() {
   state.sessionType = 'standard';
 
   refreshModePill();
+  const tabs = document.getElementById('mainTabs');
+  if (tabs) tabs.classList.add('hidden');
   document.getElementById('setup').classList.add('hidden');
+  const progressPage = document.getElementById('progressPage');
+  if (progressPage) progressPage.classList.add('hidden');
   document.getElementById('resumeBanner').classList.add('hidden');
   document.getElementById('results').classList.add('hidden');
   document.getElementById('quiz').classList.remove('hidden');
@@ -2497,6 +2583,9 @@ function abandonQuiz() {
   clearSavedState();
   state = { queue: [], current: 0, answers: {}, checked: {}, optionOrders: {}, mode: 'study', scoring: 'PARZIALE_LINEARE', started: null, sessionType: 'standard' };
   document.getElementById('quiz').classList.add('hidden');
+  const tabs = document.getElementById('mainTabs');
+  if (tabs) tabs.classList.remove('hidden');
+  updateMainTabs('setup');
   document.getElementById('setup').classList.remove('hidden');
   checkForSavedSession();
   updateSmartReviewUI();
@@ -2637,6 +2726,8 @@ function finishQuiz() {
   document.getElementById('smartReviewBtn').classList.toggle('hidden', smartPayload.queue.length === 0);
 
   document.getElementById('quiz').classList.add('hidden');
+  const tabs = document.getElementById('mainTabs');
+  if (tabs) tabs.classList.add('hidden');
   document.getElementById('results').classList.remove('hidden');
   document.getElementById('reviewContainer').innerHTML = '';
   // Il quiz è finito: cancella la sessione salvata così non appare come "da riprendere"
@@ -2651,6 +2742,9 @@ function restart() {
   clearSavedState();
   state = { queue: [], current: 0, answers: {}, checked: {}, optionOrders: {}, mode: 'study', scoring: 'PARZIALE_LINEARE', started: null, sessionType: 'standard' };
   document.getElementById('results').classList.add('hidden');
+  const tabs = document.getElementById('mainTabs');
+  if (tabs) tabs.classList.remove('hidden');
+  updateMainTabs('setup');
   document.getElementById('setup').classList.remove('hidden');
   document.getElementById('reviewContainer').innerHTML = '';
   toggleQuizScoreVisibility();
@@ -3248,6 +3342,9 @@ function updateSmartReviewUI() {
   const data = migrateSmartReviewData(loadSmartReview());
   const items = deriveSmartReviewItems(data, 'all');
   const stats = getSmartStats(data);
+  const smartVisible = document.getElementById('smartReviewPage') && !document.getElementById('smartReviewPage').classList.contains('hidden');
+  const progressVisible = document.getElementById('progressPage') && !document.getElementById('progressPage').classList.contains('hidden');
+  updateMainTabs(smartVisible ? 'smart' : (progressVisible ? 'progress' : 'setup'));
   if (!items.length) {
     if (box) box.classList.add('hidden');
     if (btn) btn.classList.add('hidden');
@@ -3264,13 +3361,63 @@ function updateSmartReviewUI() {
       <div class="smart-metric blue"><span class="n">${stats.frequent}</span><span class="lbl">Errori frequenti</span></div>
       <div class="smart-metric green"><span class="n">${stats.recovered}</span><span class="lbl">Recuperate</span></div>`;
   }
-  if (box) box.classList.remove('hidden');
+  if (box) box.classList.add('hidden');
   if (btn) btn.classList.remove('hidden');
   refreshSyncPanel();
 }
 
-function openSmartReviewPage(filter='all') {
+
+function updateMainTabs(active='setup') {
+  const tabs = document.getElementById('mainTabs');
+  if (tabs) tabs.classList.remove('hidden');
+  const setupTab = document.getElementById('tabSetup');
+  const smartTab = document.getElementById('tabSmart');
+  const progressTab = document.getElementById('tabProgress');
+  if (setupTab) setupTab.classList.toggle('active', active === 'setup');
+  if (smartTab) smartTab.classList.toggle('active', active === 'smart');
+  if (progressTab) progressTab.classList.toggle('active', active === 'progress');
+  const count = document.getElementById('tabSmartCount');
+  if (count) {
+    const n = deriveSmartReviewItems(migrateSmartReviewData(loadSmartReview()), 'all').length;
+    count.textContent = n;
+    count.classList.toggle('hidden', n === 0);
+  }
+}
+
+function showSetupTab() {
+  document.getElementById('smartReviewPage').classList.add('hidden');
+  const progressPage = document.getElementById('progressPage');
+  if (progressPage) progressPage.classList.add('hidden');
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('setup').classList.remove('hidden');
+  checkForSavedSession();
+  updateSmartReviewUI();
+  renderChapterStats();
+  updateMainTabs('setup');
+  window.scrollTo({ top: 0 });
+}
+
+function showProgressTab() {
+  updateMainTabs('progress');
   document.getElementById('setup').classList.add('hidden');
+  document.getElementById('smartReviewPage').classList.add('hidden');
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('resumeBanner').classList.add('hidden');
+  const progressPage = document.getElementById('progressPage');
+  if (progressPage) progressPage.classList.remove('hidden');
+  updateOverallProgress();
+  renderChapterStats();
+  refreshSyncPanel();
+  window.scrollTo({ top: 0 });
+}
+
+function openSmartReviewPage(filter='all') {
+  updateMainTabs('smart');
+  document.getElementById('setup').classList.add('hidden');
+  const progressPage = document.getElementById('progressPage');
+  if (progressPage) progressPage.classList.add('hidden');
   document.getElementById('quiz').classList.add('hidden');
   document.getElementById('results').classList.add('hidden');
   document.getElementById('resumeBanner').classList.add('hidden');
@@ -3280,16 +3427,30 @@ function openSmartReviewPage(filter='all') {
 }
 
 function backToSetupFromSmartReview() {
+  updateMainTabs('setup');
   document.getElementById('smartReviewPage').classList.add('hidden');
+  const progressPage = document.getElementById('progressPage');
+  if (progressPage) progressPage.classList.add('hidden');
   document.getElementById('setup').classList.remove('hidden');
   updateSmartReviewUI();
   renderChapterStats();
   window.scrollTo({ top: 0 });
 }
 
+function getVisibleSmartReviewItems(filter='all') {
+  const data = migrateSmartReviewData(loadSmartReview());
+  let items = deriveSmartReviewItems(data, filter === 'chapter' ? 'all' : filter);
+  // Nella schermata ripasso le domande vengono ordinate per capitolo e poi per numero domanda.
+  return items
+    .slice()
+    .sort((a,b) => (Number(a.q.c) - Number(b.q.c)) || (Number(a.q.n) - Number(b.q.n)) || (b.meta.priority - a.meta.priority));
+}
+
 function renderSmartReviewPage(filter='all') {
   const page = document.getElementById('smartReviewPage');
   if (page && page.classList.contains('hidden')) openSmartReviewPage(filter);
+  updateMainTabs('smart');
+  window.currentSmartReviewFilter = filter;
   ['all','always_wrong','partial','chapter','recent'].forEach(f => {
     const b = document.getElementById('smartFilter_' + f);
     if (b) b.classList.toggle('active', f === filter);
@@ -3303,7 +3464,6 @@ function renderSmartReviewPage(filter='all') {
     <div class="smart-stat-card blue"><div class="icon">!</div><div class="label">Errori frequenti</div><div class="value">${stats.frequent}</div></div>
     <div class="smart-stat-card green"><div class="icon">✓</div><div class="label">Recuperate</div><div class="value">${stats.recovered}</div></div>`;
 
-  const allItems = deriveSmartReviewItems(data, filter === 'chapter' ? 'all' : filter);
   const weakMap = {};
   deriveSmartReviewItems(data, 'all').forEach(item => {
     const ch = String(item.q.c);
@@ -3311,29 +3471,40 @@ function renderSmartReviewPage(filter='all') {
     weakMap[ch].count += 1;
     weakMap[ch].priority += item.meta.priority;
   });
-  const weak = Object.values(weakMap).sort((a,b) => b.count - a.count || b.priority - a.priority).slice(0, 5);
+  const weak = Object.values(weakMap).sort((a,b) => Number(a.ch) - Number(b.ch)).slice(0, 8);
   const maxCount = Math.max(1, ...weak.map(x => x.count));
   const weakEl = document.getElementById('smartWeakChapters');
   if (weakEl) {
-    weakEl.innerHTML = weak.length ? weak.map((w, i) => {
-      const color = i === 0 ? 'red' : (i === 1 ? 'orange' : 'blue');
+    weakEl.innerHTML = weak.length ? weak.map((w) => {
+      const color = w.count >= maxCount ? 'red' : (w.count >= 2 ? 'orange' : 'blue');
       const pct = Math.max(10, (w.count / maxCount) * 100);
       return `<div class="weak-row"><b>${escapeHtml(w.label)}</b><div class="weak-track"><div class="weak-fill ${color}" style="width:${pct}%"></div></div><span style="color:var(--c-${color === 'red' ? 'red' : color === 'orange' ? 'yellow' : 'accent'}); font-weight:700;">${w.count} domande critiche</span><button class="secondary" onclick="startSmartReview('chapter', ${Number(w.ch)})">Ripassa</button></div>`;
     }).join('') : '<div class="smart-empty">Nessun capitolo debole rilevato.</div>';
   }
 
-  let visible = allItems;
-  if (filter === 'chapter') visible = allItems.slice();
+  const visible = getVisibleSmartReviewItems(filter);
   const tableEl = document.getElementById('smartQuestionTable');
   if (tableEl) {
     if (!visible.length) {
       tableEl.innerHTML = '<div class="smart-empty">Non ci sono domande da ripassare con questo filtro.</div>';
     } else {
-      tableEl.innerHTML = `<table class="smart-table"><thead><tr><th>Domanda</th><th>Capitolo</th><th>Stato</th><th>Conteggio</th><th>Ultimo errore</th><th>Azione</th></tr></thead><tbody>${visible.slice(0, 12).map(item => {
-        const when = item.lastAt ? new Date(item.lastAt).toLocaleDateString('it-IT') : '—';
+      tableEl.innerHTML = `<table class="smart-table"><thead><tr><th class="smart-select-cell">Sel.</th><th>Capitolo</th><th>Domanda</th><th>Stato</th><th>Conteggio</th><th>Azione</th></tr></thead><tbody>${visible.slice(0, 40).map(item => {
         const countText = `${item.wrong || 0} errori · ${item.partial || 0} parziali`;
-        return `<tr><td><b>Domanda ${item.q.n}</b></td><td>Cap ${item.q.c}</td><td><span class="smart-status-badge ${item.meta.color}">${item.meta.label}</span></td><td>${countText}</td><td>${when}</td><td><button onclick="startSmartReview('single', ${item.idx})">Ripassa ora</button></td></tr>`;
-      }).join('')}</tbody></table><div style="text-align:center; margin-top:12px;"><button class="ghost" onclick="markVisibleSmartAsLearned('${filter}')">Segna visibili come imparate</button></div>`;
+        return `<tr>
+          <td class="smart-select-cell"><input class="smart-select-check" type="checkbox" value="${item.idx}" aria-label="Seleziona domanda ${item.q.n}"></td>
+          <td><b>Cap ${item.q.c}</b><br><span style="color:var(--c-text-2); font-size:12px;">${escapeHtml(CHAPTERS[item.q.c] || '')}</span></td>
+          <td><b>Domanda ${item.q.n}</b></td>
+          <td><span class="smart-status-badge ${item.meta.color}">${item.meta.label}</span></td>
+          <td>${countText}</td>
+          <td><button onclick="startSmartReview('single', ${item.idx})">Ripassa ora</button></td>
+        </tr>`;
+      }).join('')}</tbody></table>
+      <div class="smart-selection-actions">
+        <button class="secondary" onclick="toggleAllVisibleSmartChecks(true)">Seleziona visibili</button>
+        <button class="ghost" onclick="toggleAllVisibleSmartChecks(false)">Deseleziona</button>
+        <button onclick="markSelectedSmartAsLearned()">Segna selezionate come imparate</button>
+        <div class="smart-selection-note">Le domande diventano “imparate” solo se le selezioni manualmente.</div>
+      </div>`;
     }
   }
 }
@@ -3365,7 +3536,11 @@ function startSmartReview(filter='all', value=null) {
   state.sessionType = 'smart_review';
 
   refreshModePill();
+  const tabs = document.getElementById('mainTabs');
+  if (tabs) tabs.classList.add('hidden');
   document.getElementById('setup').classList.add('hidden');
+  const progressPage = document.getElementById('progressPage');
+  if (progressPage) progressPage.classList.add('hidden');
   document.getElementById('smartReviewPage').classList.add('hidden');
   document.getElementById('resumeBanner').classList.add('hidden');
   document.getElementById('results').classList.add('hidden');
@@ -3376,22 +3551,34 @@ function startSmartReview(filter='all', value=null) {
   renderQuestion();
 }
 
-function markVisibleSmartAsLearned(filter='all') {
+function toggleAllVisibleSmartChecks(checked) {
+  document.querySelectorAll('#smartQuestionTable .smart-select-check').forEach(cb => cb.checked = !!checked);
+}
+
+function markSelectedSmartAsLearned() {
+  const selected = Array.from(document.querySelectorAll('#smartQuestionTable .smart-select-check:checked')).map(cb => Number(cb.value));
+  if (!selected.length) {
+    alert('Seleziona almeno una domanda da segnare come imparata.');
+    return;
+  }
+  if (!confirm(`Segnare ${selected.length} domanda/e selezionata/e come imparate? Non compariranno più nel ripasso intelligente, salvo nuovi errori.`)) return;
   const data = migrateSmartReviewData(loadSmartReview());
-  const visible = deriveSmartReviewItems(data, filter === 'chapter' ? 'all' : filter).slice(0, 12);
-  if (!visible.length) return;
-  if (!confirm('Segnare queste domande come imparate? Non compariranno più nel ripasso intelligente, salvo nuovi errori.')) return;
-  visible.forEach(item => {
-    const key = String(item.idx);
+  selected.forEach(idx => {
+    const key = String(idx);
     if (data.items[key]) data.items[key].learned = true;
   });
   data.savedAt = Date.now();
   data.queue = deriveSmartReviewItems(data, 'all').map(x => x.idx);
   saveSmartReview(data);
-  renderSmartReviewPage(filter);
+  renderSmartReviewPage(window.currentSmartReviewFilter || 'all');
   updateSmartReviewUI();
 }
 
+function markVisibleSmartAsLearned(filter='all') {
+  // Compatibilità con versioni precedenti: non marca più tutto automaticamente.
+  renderSmartReviewPage(filter);
+  alert('Ora puoi selezionare manualmente le domande e poi premere “Segna selezionate come imparate”.');
+}
 
 function finalizeAppAfterAllModulesLoaded() {
   const mainApp = document.getElementById('mainApp');
@@ -3401,6 +3588,7 @@ function finalizeAppAfterAllModulesLoaded() {
   if (typeof renderChapterStats === 'function') renderChapterStats();
   if (typeof refreshSyncPanel === 'function') refreshSyncPanel();
   if (typeof updateHeaderForView === 'function') updateHeaderForView();
+  if (typeof updateMainTabs === 'function') updateMainTabs('setup');
   if (typeof toggleQuizScoreVisibility === 'function') toggleQuizScoreVisibility();
 }
 finalizeAppAfterAllModulesLoaded();
