@@ -2863,13 +2863,59 @@ function chooseNewestRecord(currentValue, incomingValue) {
   return incomingTs >= currentTs ? incomingValue : currentValue;
 }
 
+function mergeSmartReviewRecords(currentValue, incomingValue) {
+  const current = migrateSmartReviewData(currentValue);
+  const incoming = migrateSmartReviewData(incomingValue);
+  const items = { ...(current.items || {}) };
+
+  Object.entries(incoming.items || {}).forEach(([key, inc]) => {
+    if (!inc || typeof inc !== 'object') return;
+    const cur = items[key] || { idx: Number(inc.idx ?? key), seen: 0, correct: 0, wrong: 0, partial: 0, empty: 0, streakCorrect: 0, lastStatus: null, lastAt: 0, learned: false };
+    const merged = { ...cur };
+
+    ['seen', 'correct', 'wrong', 'partial', 'empty'].forEach(k => {
+      merged[k] = Math.max(Number(cur[k] || 0), Number(inc[k] || 0));
+    });
+
+    const curLastAt = Number(cur.lastAt || 0);
+    const incLastAt = Number(inc.lastAt || 0);
+    if (incLastAt >= curLastAt) {
+      merged.lastStatus = inc.lastStatus || cur.lastStatus || null;
+      merged.lastAt = incLastAt || curLastAt || Date.now();
+      merged.lastScore = inc.lastScore ?? cur.lastScore;
+      merged.streakCorrect = Number(inc.streakCorrect || 0);
+    } else {
+      merged.lastAt = curLastAt || incLastAt || Date.now();
+      merged.streakCorrect = Number(cur.streakCorrect || 0);
+    }
+
+    // Una domanda resta "appresa" solo se risulta appresa su entrambi i dispositivi.
+    // Così, se su un altro dispositivo è stata sbagliata di nuovo, rientra nel ripasso.
+    merged.learned = Boolean(cur.learned && inc.learned);
+    merged.idx = Number(cur.idx ?? inc.idx ?? key);
+    items[key] = merged;
+  });
+
+  const merged = {
+    version: 3,
+    items,
+    scoring: incoming.scoring || current.scoring || 'PARZIALE_LINEARE',
+    savedAt: Math.max(Number(current.savedAt || 0), Number(incoming.savedAt || 0), Date.now())
+  };
+  merged.queue = deriveSmartReviewItems(merged, 'all').map(x => x.idx);
+  merged.wrong = merged.queue.filter(idx => classifySmartItem(items[String(idx)] || {}).color === 'red');
+  merged.partial = merged.queue.filter(idx => classifySmartItem(items[String(idx)] || {}).color === 'orange');
+  return merged;
+}
+
 function importSync() {
   if (!LS_OK) {
     updateSyncStatus('Questo browser non permette il salvataggio locale: la sincronizzazione manuale non è disponibile.', 'error');
     return;
   }
 
-  const input = document.getElementById('syncBox').value.trim();
+  const field = document.getElementById('syncBox');
+  const input = field ? field.value.replace(/\s+/g, '').trim() : '';
   if (!input) {
     updateSyncStatus('Incolla prima un codice valido da importare.', 'warn');
     return;
@@ -2877,26 +2923,32 @@ function importSync() {
 
   try {
     const parsed = JSON.parse(decodeBase64Utf8(input));
+    if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.statsHistory)) {
+      throw new Error('Payload di sincronizzazione incompleto');
+    }
+
+    const beforeHistory = loadStatsHistory();
     const incomingHistory = Array.isArray(parsed.statsHistory) ? parsed.statsHistory : [];
-    const mergedHistory = mergeHistoryEntries(loadStatsHistory(), incomingHistory);
+    const mergedHistory = mergeHistoryEntries(beforeHistory, incomingHistory);
     saveStatsHistory(mergedHistory);
 
-    const newestSmart = chooseNewestRecord(loadSmartReview(), parsed.smartReview || null);
-    if (newestSmart) saveSmartReview(newestSmart); else clearSmartReview();
+    const mergedSmart = mergeSmartReviewRecords(loadSmartReview(), parsed.smartReview || null);
+    saveSmartReview(mergedSmart);
 
     const newestSession = chooseNewestRecord(loadState(), parsed.savedSession || null);
     if (newestSession && Array.isArray(newestSession.queue) && newestSession.queue.length) {
       try { localStorage.setItem(getSessionStorageKey(), JSON.stringify({ ...newestSession, savedAt: newestSession.savedAt || Date.now() })); } catch(e) {}
-    } else {
-      clearSavedState();
     }
 
     updateSmartReviewUI();
     checkForSavedSession();
     renderChapterStats();
+    refreshSyncPanel();
 
-    const importedUser = parsed.user ? ` per <b>${escapeHtml(parsed.user)}</b>` : '';
-    updateSyncStatus(`Sincronizzazione completata${importedUser}. I dati sono stati integrati nell'utente attualmente aperto su questo dispositivo.`, 'ok');
+    const importedUser = parsed.user ? ` da <b>${escapeHtml(parsed.user)}</b>` : '';
+    const addedQuizzes = Math.max(0, mergedHistory.length - beforeHistory.length);
+    const activeSmart = mergedSmart && Array.isArray(mergedSmart.queue) ? mergedSmart.queue.length : 0;
+    updateSyncStatus(`Sincronizzazione completata${importedUser}. Integrati <b>${addedQuizzes}</b> nuovi quiz nella cronologia e aggiornato il ripasso intelligente con <b>${activeSmart}</b> domande attive.`, 'ok');
   } catch (e) {
     updateSyncStatus('Codice non valido oppure incompleto. Rigenera il codice dal dispositivo originale e riprova.', 'error');
   }
